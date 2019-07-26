@@ -1,0 +1,91 @@
+# skillet preamble information used by panhandler
+# ---------------------------------------------------------------------
+# unique snippet name
+name: bgp-peer
+# label used for menu selection
+label: bgp-peer
+description: This skillet will configure a BGP peer
+
+# type of device configuration
+# common types are panorama, panos, and template
+# https://github.com/PaloAltoNetworks/panhandler/blob/develop/docs/metadata_configuration.rst
+type: panos
+# preload static or default-based templates
+extends:
+
+# grouping of like snippets for dynamic menu creation in panhandler
+labels:
+  collection:
+    - myCollection
+
+# ---------------------------------------------------------------------
+# end of preamble section
+
+# variables section
+# ---------------------------------------------------------------------
+# variables used in the configuration templates
+# type_hint defines the form field used by panhandler
+# type_hints can be text, ip_address, or dropdown
+variables:
+  - name: hostname
+    description: Firewall hostname
+    default: myFirewall
+    type_hint: text
+  - name: virtual_router_name
+    description: Name of the virtual router (must already exist)
+    default: default
+    type_hint: text
+  - name: router_id
+    description: Router ID for BGP Peering
+    default: 10.0.0.1
+    type_hint: text
+  - name: local_as
+    description: AS Number for the local Virtual Router
+    default: 40000
+    type_hint: text
+  - name: redist_default_route
+    description: Redistribute the default route?
+    default: True
+    type_hint: dropdown
+    dd_list:
+      - key: Yes
+        value: "yes"
+      - key: No
+        value: "no"
+  - name: peer_group_name
+    description: Name for peer group
+    default: peer-group-1
+    type_hint: text
+  - name: peer_name
+    description: Name for the peer router
+    default: peer-router-1
+    type_hint: text
+  - name: peer_ip
+    description: IP Address of the Peer Router
+    default: 0.0.0.0
+    type_hint: text
+  - name: local_address
+    description: Local Interface Address/Subnet Mask to enable BGP
+    default: 10.0.0.1/8
+    type_hint: text
+  - name: local_interface
+    description: Local Interface Name to enable BGP
+    default: ethernet1/1
+    type_hint: text
+  - name: peer_as
+    description: AS Number for the BGP Peer
+    default: 40000
+    type_hint: text
+# ---------------------------------------------------------------------
+# end of variables section
+
+# snippets section
+# ---------------------------------------------------------------------
+# snippets used for api configuration including xpath and element as file name
+# files will load in the order listed
+snippets:
+  - name: bgp
+    xpath: /config/devices/entry[@name='localhost.localdomain']/network/virtual-router
+    file: bgp.xml
+# ---------------------------------------------------------------------
+# end of snippets section
